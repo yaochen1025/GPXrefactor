@@ -12,11 +12,11 @@ public class GPXtrk {
     // the name for this track
     private String name;
     // a list of track segments
-    private ArrayList trksegs;
+    private ArrayList<GPXtrkseg> trksegs;
     // reference to parent GPXobject
     private GPXobject parent;
 
-    public GPXtrk(String name, ArrayList trksegs, GPXobject parent) {
+    public GPXtrk(String name, ArrayList<GPXtrkseg> trksegs, GPXobject parent) {
 		this.name = name;
 		this.trksegs = trksegs;
 		this.parent = parent;
@@ -33,7 +33,7 @@ public class GPXtrk {
      */
     public GPXtrkseg trkseg(int index) {
 		if (index >= trksegs.size()) return null;
-		else return (GPXtrkseg)(trksegs.get(index));
+		return trksegs.get(index);
     }
 
     /**
@@ -48,7 +48,7 @@ public class GPXtrk {
      */
     public GPXtrkseg[] trksegs() {
 		GPXtrkseg segs[] = new GPXtrkseg[trksegs.size()];
-		for (int i = 0; i < segs.length; i++) segs[i] = (GPXtrkseg)trksegs.get(i);
+		for (int i = 0; i < segs.length; i++) segs[i] = trksegs.get(i);
 		return segs;
     }
 
