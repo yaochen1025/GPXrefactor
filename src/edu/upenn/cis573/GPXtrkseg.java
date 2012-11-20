@@ -21,8 +21,10 @@ public class GPXtrkseg {
      * @return The track point at the provided index. Return null if the index is too large (i.e., is larger than the number of points)
      */
     public GPXtrkpt trkpt(int index) {
-		if (index >= trkpts.size()) return null;
-		return trkpts.get(index);
+		if (index >= trkpts.size()) {
+			return null;
+		}
+		return (GPXtrkpt)(trkpts.get(index));
     }
 
     /**
@@ -37,7 +39,9 @@ public class GPXtrkseg {
      */
     public GPXtrkpt[] trkpts() {
 		GPXtrkpt pts[] = new GPXtrkpt[trkpts.size()];
-		for (int i = 0; i < pts.length; i++) pts[i] = trkpts.get(i);
+		for (int i = 0; i < pts.length; i++) {
+			pts[i] = trkpts.get(i);
+		}
 		return pts;
     }
     
@@ -60,8 +64,5 @@ public class GPXtrkseg {
 		
 		// total elapsed time in milliseconds
 		return end - start;
-
     }
-
-
 }

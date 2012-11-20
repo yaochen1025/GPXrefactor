@@ -6,162 +6,142 @@ package edu.upenn.cis573;
  * a GPXobject.
  */
 
-import java.util.Scanner;
 import java.io.File;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.dom4j.Attribute;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
 public class GPXparser {
-
-    /**
-     * This method takes a file in GPX format and converts it into a GPXobject,
-     * using the GPXformat to determine what needs to be read.
-     * It assumes that the file has already been checked and that the format
-     * is valid.
-     *
-     * @param filename The file to be read
-     * @param format A GPXformat object that would be created as the result of calling GPXchecker.checkFormat
-     * @returns a GPXobject that holds all the data in the file
-     */
-    public static GPXobject parse(String filename, GPXformat format) {
-		// make sure the format is valid before proceeding
-		if (format.isValid() == false) return null;
 	
-		// return value
-		GPXobject object = null;
-	
+	public GPXobject fromFile(String fileName) {
+		Element root = null;
 		try {
-		    // create a scanner to read the file and set its delimeter
-		    Scanner in = new Scanner(new File(filename));
-		    in.useDelimiter(">");
-	
-		    // get the list of tags
-		    ArrayList tags = format.tags();
-		    // index for reading the list
-		    int index = 0;
-	
-		    // read the <gpx> tag
-		    in.next();
-		    index++;
-	
-		    // next is <time>
-		    in.next();
-		    index++;
-		    
-		    // now the content and </time>
-		    String objtime = in.next();
-		    index++;
-		    //System.out.println("TIME: " + objtime);
-		    objtime = objtime.substring(0, objtime.indexOf('<'));
-		    //System.out.println("time: " + objtime);
-		
-		    // now we're on <trk>
-		    in.next();
-		    index++;
-		    
-		    String name = null;
-		    // next is <name> but it's optional
-		    if (tags.get(index).equals("<name")) {
-		    	in.next();
-		    	index++;
-		    
-		    	// then the content and </name>
-		    	name = in.next();
-		    	index++;
-		    	//System.out.println("NAME: " + name);
-		    	name = name.substring(0, name.indexOf('<'));
-		    	//System.out.println("name: " + name);
-		    }
-	
-		    // to hold the GPXtrk objects
-		    ArrayList trksegs = new ArrayList();
-
-
-		    // now we have some number of <trkseg> tags
-		    while (tags.get(index++).equals("<trkseg")) {
-				// consume the token
-				in.next();
-				
-				// to hold the GPXtrkpt objects
-				ArrayList trkpts = new ArrayList();
-		
-				// now we have some number of <trkpt> tags
-				while (tags.get(index++).equals("<trkpt")) {
-				    // get the latitude and longitude
-				    String latlon = in.next().trim();
-				    //System.out.println("LATLON: " + latlon);
-		
-				    // the latitude will be something like lat="xx.xxxx"
-				    String lat = latlon.split(" ")[1];
-				    lat = lat.substring(5, lat.length()-1);
-				    //System.out.println("lat: " + lat);
-		
-				    // same for longitude
-				    String lon = latlon.split(" ")[2];
-				    lon = lon.substring(5, lon.length()-1);
-				    //System.out.println("lon: " + lon);
-				    
-		
-				    // read <ele>
-				    in.next();
-				    index++;
-		
-				    // read elevation and </ele>
-				    String ele = in.next();
-				    //System.out.println("ELE: " + ele);
-				    // the elevation will be a number then the </ele tag
-				    ele = ele.substring(0, ele.indexOf('<'));
-				    //System.out.println("ele: " + ele);
-				    index++;
-		
-				    // read <time>
-				    in.next();
-				    index++;
-		
-				    // read time and </time>
-				    String time = in.next();
-				    //System.out.println("TIME: " + time);
-				    // the time will be the time string followed by </time
-				    time = time.substring(0, time.indexOf('<'));
-				    //System.out.println("time: " + time);
-				    index++;
-		
-				    // read </trkpt>
-				    in.next();
-				    index++;
-		
-				    // create a GPXtrkpt object
-				    GPXtrkpt trkpt = new GPXtrkpt(Double.parseDouble(lat), Double.parseDouble(lon), Double.parseDouble(ele), time);
-				    
-				    // put it into the list
-				    trkpts.add(trkpt);
-				}
-		
-				// read </trkseg>
-				in.next();
-		
-				// create a GPXtrkseg object
-				GPXtrkseg trkseg = new GPXtrkseg(trkpts);
-		
-				// add it to the list
-				trksegs.add(trkseg);
-		
-			}
-		    
-		    // don't care about </trk> and </gpx>
-		    in.next();
-		    in.next();
-	
-		    // create the GPXobject
-		    object = new GPXobject(objtime, name, trksegs);
-	
+			root = this.readGPXFile(fileName);
+		} catch (Exception e) {
+			return null;
 		}
-		catch (Exception e) {
-		    e.printStackTrace();
-	
+		if (!this.validateGPXFile(root)) {
+			return null;
 		}
-		
+		return this.mapToGPXObject(root);
+	}
 	
-		return object;
+	private GPXobject mapToGPXObject(Element root) {
+		Element gpx = root.element("gpx");
+		Element time = gpx.element("time");
+		Element trk = gpx.element("trk");
+		String timeVal = time.getStringValue();
+		GPXtrk gpxTrk = this.mapToTrk(trk);
+		return new GPXobject(timeVal, gpxTrk);
+	}
+	
+	private GPXtrk mapToTrk(Element trk) {
+		return null;
+	}
+    
+    private Element readGPXFile(String fileName) throws Exception {
+    	SAXReader reader = new SAXReader();
+    	Document doc = reader.read(new File(fileName));
+    	return doc.getRootElement();
     }
+    
+    private boolean validateGPXFile(Element root) {
+    	List<Element> children = root.elements();
+    	if (children.size() != 1) {
+    		return false;
+    	}
+    	Element gpx = children.get(0);
+    	if (!"gpx".equals(gpx.getName())) {
+    		return false;
+    	}
+    	return validateGPXElement(gpx);
+    }
+	
+	private boolean validateGPXElement(Element gpx) {
+		List<Element> children = gpx.elements();
+		if (children.size() != 2) {
+			return false;
+		}
+		Element time = children.get(0);
+		Element trk = children.get(1);
+		if (!"time".equals(time.getName()) || !"trk".equals(trk.getName())) {
+			return false;
+		}
+		return validateTimeElement(time)&&validateTrkElement(trk);
+	}
+	
+	private boolean validateTimeElement(Element time) {
+		String value = time.getStringValue();
+		return true;
+	}
+	
+	private boolean validateTrkElement(Element trk) {
+		List<Element> children = trk.elements();
+		if (children.size() == 0) {
+			return true;
+		}
+		Element maybeName = children.get(0);
+		int start = 0;
+		if ("name".equals(maybeName.getName())) {
+			start = 1;
+		}
+		for (int i = start; start < children.size(); i++) {
+			Element trkSeg = children.get(i);
+			if (!"trkSeg".equals(trkSeg.getName())) {
+				return false;
+			}
+			if (!validateTrkSegElement(trkSeg)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean validateTrkSegElement(Element trkSeg) {
+		List<Element> children = trkSeg.elements();
+		for (int i = 0; i < children.size(); i++) {
+			Element trkPt = children.get(i);
+			if (!validateTrkPtElement(trkPt)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean validateTrkPtElement(Element trkPt) {
+		List<Element> children = trkPt.elements();
+		if (children.size() != 2) {
+			return false;
+		}
+		Element ele = children.get(0);
+		Element time = children.get(1);
+		if (!"ele".equals(ele.getName())) {
+			return false;
+		}
+		if (!"time".equals(time.getName())) {
+			return false;
+		}
+		if (!validateTimeElement(time)) {
+			return false;
+		}
+		List<Attribute> attrs = ele.attributes();
+		if (attrs.size() != 2) {
+			return false;
+		}
+		Attribute lat = attrs.get(0);
+		Attribute lon = attrs.get(1);
+		if (!"lat".equals(lat.getName())) {
+			return false;
+		}
+		if (!"lon".equals(lon.getName())) {
+			return false;
+		}
+		return true;
+	}
 
 }
