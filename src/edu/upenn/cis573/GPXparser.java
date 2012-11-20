@@ -7,8 +7,9 @@ package edu.upenn.cis573;
  */
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dom4j.Attribute;
@@ -35,15 +36,52 @@ public class GPXparser {
 		Element gpx = root.element("gpx");
 		Element time = gpx.element("time");
 		Element trk = gpx.element("trk");
-		String timeVal = time.getStringValue();
+		String timeVal = time.getText();
 		GPXtrk gpxTrk = this.mapToTrk(trk);
 		return new GPXobject(timeVal, gpxTrk);
 	}
 	
 	private GPXtrk mapToTrk(Element trk) {
-		return null;
+		Element name = trk.element("name");
+		List<Element> trkSegs = trk.elements("trkseg");
+		String nameVal = null;
+		if (name != null) {
+			nameVal = name.getText();
+		}
+		ArrayList<GPXtrkseg> segs = new ArrayList<GPXtrkseg>();
+		if (trkSegs != null) {
+			for (int i = 0; i < trkSegs.size(); i++) {
+				GPXtrkseg seg = mapToTrkSeg(trkSegs.get(i));
+				segs.add(seg);
+			}
+		}
+		return new GPXtrk(nameVal, segs);
 	}
     
+	private GPXtrkseg mapToTrkSeg(Element trkSeg) {
+		List<Element> trkPts = trkSeg.elements("trkpt");
+		ArrayList<GPXtrkpt> pts = new ArrayList<GPXtrkpt>();
+		if (trkPts != null) {
+			for (int i = 0; i < trkPts.size(); i++) {
+				GPXtrkpt pt = mapToTrkPt(trkPts.get(i));
+				pts.add(pt);
+			}
+		}
+		return new GPXtrkseg(pts);
+	}
+	
+	private GPXtrkpt mapToTrkPt(Element trkPt) {
+		Attribute lat = trkPt.attribute("lat");
+		Attribute lon = trkPt.attribute("lon");
+		Element ele = trkPt.element("ele");
+		Element time = trkPt.element("time");
+		double latVal = Double.parseDouble(lat.getText());
+		double lonVal = Double.parseDouble(lon.getText());
+		double eleVal = Double.parseDouble(ele.getText());
+		String timeVal = time.getText();
+		return new GPXtrkpt(latVal, lonVal, eleVal, timeVal);
+	}
+	
     private Element readGPXFile(String fileName) throws Exception {
     	SAXReader reader = new SAXReader();
     	Document doc = reader.read(new File(fileName));
@@ -76,7 +114,13 @@ public class GPXparser {
 	}
 	
 	private boolean validateTimeElement(Element time) {
-		String value = time.getStringValue();
+		String value = time.getText();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'T'");
+		try {
+			format.parse(value);
+		} catch (ParseException e) {
+			return false;
+		}
 		return true;
 	}
 	

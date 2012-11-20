@@ -34,11 +34,23 @@ public class GPXtrkpt {
     }
 
     /* Accessors */
-    public double lat() { return lat; }
-    public double lon() { return lon; }
-    public double ele() { return ele; }
-    public String timeString() { return this.timeString;}
-    public long time() { return this.time.getTime();}
+    public double getLatitude() { 
+    	return lat; 
+    }
     
-
+    public double getLongitude() { 
+    	return lon; 
+    }
+    
+    public double getElevation() { 
+    	return ele; 
+    }
+    
+    public String timeString() { 
+    	return this.timeString;
+    }
+    
+    public long getTime() {
+    	return this.time.getTime();
+    }
 }

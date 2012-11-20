@@ -40,7 +40,7 @@ public class GPXcalculatorTest {
 
 	@Test
 	public void testElapsedTimeGPXtrk() {		
-		long time = calc.calculateElapsedTime(obj.trk());
+		long time = calc.calculateElapsedTime(obj.getTrack());
 
 		// should be three days
 		long threeDays = 3 * 24 * 60 * 60 * 1000;
@@ -50,12 +50,12 @@ public class GPXcalculatorTest {
 	@Test
 	public void testElapsedTimeGPXtrkseg() {
 		
-		long time = calc.calculateElapsedTime(obj.trk().trkseg(0));
+		long time = calc.calculateElapsedTime(obj.getTrack().getTrackSegment(0));
 		// should be one day
 		long oneDay = 24 * 60 * 60 * 1000;
 		assertEquals(oneDay, time);
 
-		time = calc.calculateElapsedTime(obj.trk().trkseg(1));
+		time = calc.calculateElapsedTime(obj.getTrack().getTrackSegment(1));
 		// should be two days
 		assertEquals(oneDay * 2, time);
 		
@@ -64,24 +64,24 @@ public class GPXcalculatorTest {
 	@Test
 	public void testDistanceTraveledGPXtrk() {
 		
-		double dist = calc.calculateDistanceTraveled(obj.trk());
+		double dist = calc.calculateDistanceTraveled(obj.getTrack());
 		
 		assertEquals(3067.685, dist, 0.01);
 	}
 
 	@Test
 	public void testDistanceTraveledGPXtrkseg() {
-		double dist = calc.determineTotalDistanceCoveredBetweenPairsOfPointsInGPXTrackSegment(obj.trk().trkseg(0));
+		double dist = calc.determineTotalDistanceCoveredBetweenPairsOfPointsInGPXTrackSegment(obj.getTrack().getTrackSegment(0));
 		assertEquals(1568.552, dist, 0.01);
 		
-		dist = calc.determineTotalDistanceCoveredBetweenPairsOfPointsInGPXTrackSegment(obj.trk().trkseg(1));
+		dist = calc.determineTotalDistanceCoveredBetweenPairsOfPointsInGPXTrackSegment(obj.getTrack().getTrackSegment(1));
 		assertEquals(1499.132, dist, 0.01);
 	}
 	
 	@Test
 	public void testAverageSpeed() {
 		
-		double speed = calc.calculateAverageSpeed(obj.trk());
+		double speed = calc.calculateAverageSpeed(obj.getTrack());
 		assertEquals(0.000011835, speed, 0.0000001);
 
 	}
@@ -89,7 +89,7 @@ public class GPXcalculatorTest {
 	@Test
 	public void testBearing() {
 
-		double bearing = calc.bearing(obj.trk());
+		double bearing = calc.bearing(obj.getTrack());
 		assertEquals(40.89, bearing, 0.01);
 		
 	}
@@ -97,7 +97,7 @@ public class GPXcalculatorTest {
 	@Test
 	public void testFastestSegment() {
 		
-		int fastest = calc.calculateFastestSegment(obj.trk());
+		int fastest = calc.calculateFastestSegment(obj.getTrack());
 		assertEquals(1, fastest);
 		
 	}
