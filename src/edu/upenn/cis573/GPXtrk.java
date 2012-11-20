@@ -98,8 +98,8 @@ public class GPXtrk {
 		GPXtrkpt end = null;
 		for (int i = trksegs.size()-1; i >= 0; i--) {
 			GPXtrkseg seg = trksegs.get(i);
-			if (seg.pointsCount() == 0) {
-				end = seg.getTrackPoint(seg.pointsCount()-1);
+			if (seg.pointsCount() != 0) {
+				end = seg.getTrackPoint(seg.pointsCount() - 1);
 				break;
 			}
 		}
@@ -119,7 +119,7 @@ public class GPXtrk {
 	public double averageSpeed() {
 		long totalTime = this.totalTime();
 		double totalDistance = this.totalLength();
-		return totalDistance/totalTime;
+		return totalDistance / totalTime;
 	}
 
 	public int fastestSegment() {
