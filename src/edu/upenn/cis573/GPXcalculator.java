@@ -196,9 +196,11 @@ public class GPXcalculator {
 		double lat2 = end.lat() * 2 * Math.PI / 360.0;
 		double lon2 = end.lon() * 2 * Math.PI / 360.0;
 		
-		return trk.parent().bearing(lat1, lon1, lat2, lon2);
-	
-
+		double y = Math.sin(lon2-lon1) * Math.cos(lat2);
+		double x = Math.cos(lat1)*Math.sin(lat2) - Math.sin(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1);
+				
+		// return the bearing (after converting to degrees)
+		return Math.atan2(y, x) * 360.0 / (2 * Math.PI);
     }
 
 

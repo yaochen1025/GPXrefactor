@@ -14,14 +14,12 @@ public class GPXobject {
 	private String time;
     // holds all the information about the track
     private GPXtrk trk;
-    // list of all the track segments
-    private ArrayList trksegs;
     // string buffer used for printing
     private StringBuffer out;
 
-    public GPXobject(String time, String name, ArrayList trksegs) {
+    public GPXobject(String time, GPXtrk trk) {
     	this.time = time;
-    	this.trk = new GPXtrk(name, trksegs, this);
+    	this.trk = trk;
     }
 
     /* Accessors */
@@ -82,15 +80,6 @@ public class GPXobject {
 		out.append("</gpx>\n");
 	
 		return out.toString();
-
-    }
-
-    public double bearing(double a, double b, double c, double d) {
-		double y = Math.sin(d-b) * Math.cos(c);
-		double x = Math.cos(a)*Math.sin(c) - Math.sin(a)*Math.cos(c)*Math.cos(d-b);
-				
-		// return the bearing (after converting to degrees)
-		return Math.atan2(y, x) * 360.0 / (2 * Math.PI);
 
     }
     
