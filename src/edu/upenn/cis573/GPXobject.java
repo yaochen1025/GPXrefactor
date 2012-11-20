@@ -15,11 +15,11 @@ public class GPXobject {
     // holds all the information about the track
     private GPXtrk trk;
     // list of all the track segments
-    private ArrayList trksegs;
+   // private ArrayList<GPXtrkseg> trksegs;
     // string buffer used for printing
     private StringBuffer out;
 
-    public GPXobject(String time, String name, ArrayList trksegs) {
+    public GPXobject(String time, String name, ArrayList<GPXtrkseg> trksegs) {
     	this.time = time;
     	this.trk = new GPXtrk(name, trksegs, this);
     }
@@ -36,7 +36,8 @@ public class GPXobject {
      *
      * @return a well-formatted (according to the GPX file specification provided for this assignment) string representation of the object
      */
-    public String toString() {
+    @Override
+	public String toString() {
 
 		out = new StringBuffer();
 	
@@ -85,7 +86,7 @@ public class GPXobject {
 
     }
 
-    public double bearing(double a, double b, double c, double d) {
+    public static double bearing(double a, double b, double c, double d) {
 		double y = Math.sin(d-b) * Math.cos(c);
 		double x = Math.cos(a)*Math.sin(c) - Math.sin(a)*Math.cos(c)*Math.cos(d-b);
 				
