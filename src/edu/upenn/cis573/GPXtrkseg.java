@@ -16,7 +16,7 @@ public class GPXtrkseg {
 	public GPXtrkseg(ArrayList<GPXtrkpt> trkpts) {
 		this.trkpts = trkpts;
 		if (trkpts == null) {
-			trkpts = new ArrayList<GPXtrkpt>();
+			this.trkpts = new ArrayList<GPXtrkpt>();
 		}
 	}
 

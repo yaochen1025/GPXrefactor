@@ -19,7 +19,7 @@ public class GPXtrk {
 		this.name = name;
 		this.trksegs = trksegs;
 		if (trksegs == null) {
-			trksegs = new ArrayList<GPXtrkseg>();
+			this.trksegs = new ArrayList<GPXtrkseg>();
 		}
 	}
 
