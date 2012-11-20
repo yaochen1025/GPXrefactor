@@ -18,19 +18,19 @@ public class GPXparserTest {
 
 		GPXobject obj = GPXparser.parse("files/good.gpx", format);
 		
-		assertEquals("2009-10-17T22:58:43Z", obj.time());
+		assertEquals("2009-10-17T22:58:43Z", obj.getTime());
 		
-		GPXtrk trk = obj.trk();
+		GPXtrk trk = obj.getTrack();
 		
 		assertEquals(obj, trk.parent());
 		assertEquals("Walking around a little bit", trk.name());
 		
-		GPXtrkseg[] trksegs = trk.trksegs();
-		GPXtrkpt trkpt = trksegs[0].trkpt(0);
+		GPXtrkseg[] trksegs = trk.getTrackSegments();
+		GPXtrkpt trkpt = trksegs[0].getTrackPoint(0);
 
-		assertEquals(47.644548, trkpt.lat(), 0.001);
-		assertEquals(-122.326897, trkpt.lon(), 0.001);
-		assertEquals(4.46, trkpt.ele(), 0.001);
+		assertEquals(47.644548, trkpt.getLatitude(), 0.001);
+		assertEquals(-122.326897, trkpt.getLongitude(), 0.001);
+		assertEquals(4.46, trkpt.getElevation(), 0.001);
 		assertEquals("2009-10-17T18:37:26Z", trkpt.timeString());
 	}
 
@@ -41,18 +41,18 @@ public class GPXparserTest {
 
 		GPXobject obj = GPXparser.parse("files/missingName.gpx", format);
 		
-		assertEquals("2009-10-17T22:58:43Z", obj.time());
+		assertEquals("2009-10-17T22:58:43Z", obj.getTime());
 		
-		GPXtrk trk = obj.trk();
+		GPXtrk trk = obj.getTrack();
 		
 		assertEquals(obj, trk.parent());
 		
-		GPXtrkseg[] trksegs = trk.trksegs();
-		GPXtrkpt trkpt = trksegs[0].trkpt(0);
+		GPXtrkseg[] trksegs = trk.getTrackSegments();
+		GPXtrkpt trkpt = trksegs[0].getTrackPoint(0);
 
-		assertEquals(47.644548, trkpt.lat(), 0.001);
-		assertEquals(-122.326897, trkpt.lon(), 0.001);
-		assertEquals(4.46, trkpt.ele(), 0.001);
+		assertEquals(47.644548, trkpt.getLatitude(), 0.001);
+		assertEquals(-122.326897, trkpt.getLongitude(), 0.001);
+		assertEquals(4.46, trkpt.getElevation(), 0.001);
 		assertEquals("2009-10-17T18:37:26Z", trkpt.timeString());
 	}
 
@@ -62,15 +62,15 @@ public class GPXparserTest {
 
 		GPXobject obj = GPXparser.parse("files/noTrkPts.gpx", format);
 		
-		assertEquals("2009-10-17T22:58:43Z", obj.time());
+		assertEquals("2009-10-17T22:58:43Z", obj.getTime());
 		
-		GPXtrk trk = obj.trk();
+		GPXtrk trk = obj.getTrack();
 		
 		assertEquals(obj, trk.parent());
 		assertEquals("Walking around a little bit", trk.name());
 		
-		GPXtrkseg[] trksegs = trk.trksegs();		
-		assertEquals(0, trksegs[0].trkpts().length);
+		GPXtrkseg[] trksegs = trk.getTrackSegments();		
+		assertEquals(0, trksegs[0].getTrackPoints().length);
 	}
 
 }

@@ -1,6 +1,6 @@
 package edu.upenn.cis573;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents all the data in a GPX file.
@@ -25,9 +25,17 @@ public class GPXobject {
     }
 
     /* Accessors */
-    public GPXtrk trk() { return trk; }
-    public String name() { return name; }
-    public String time() { return time; }
+    public GPXtrk getTrack() { 
+    	return trk; 
+    }
+    
+    public String getName() { 
+    	return name; 
+    }
+    
+    public String getTime() { 
+    	return time; 
+    }
 
 
     /**
@@ -51,24 +59,24 @@ public class GPXobject {
 		out.append("\t\t<name>" + trk.name() + "</name>\n");
 	
 		// get all the trkseg obejcts
-		GPXtrkseg trksegs[] = trk.trksegs();
+		List<GPXtrkseg> trksegs = trk.getTrackSegments();
 	
 		if (trksegs != null) {
 	
 		    // iterate over the trksegs
-		    for (int i = 0; i < trksegs.length; i++) {
+		    for (int i = 0; i < trksegs.size(); i++) {
 			
 			out.append("\t\t<trkseg>\n");
 			
 			// get all the trkpt objects
-			GPXtrkpt trkpts[] = trksegs[i].trkpts();
+			List<GPXtrkpt> trkpts = trksegs.get(i).getTrackPoints();
 	
 			// iterate over the trkpts
-			for (int j = 0; j < trkpts.length; j++) {
-			    
-			    out.append("\t\t\t<trkpt lat=\"" + trkpts[j].lat() + "\" lon=\"" + trkpts[j].lon() + "\">\n");
-			    out.append("\t\t\t\t<ele>" + trkpts[j].ele() + "</ele>\n");
-			    out.append("\t\t\t\t<time>" + trkpts[j].timeString() + "</time>\n");
+			for (int j = 0; j < trkpts.size(); j++) {
+			    GPXtrkpt pt = trkpts.get(j);
+			    out.append("\t\t\t<trkpt lat=\"" + pt.getLatitude() + "\" lon=\"" + pt.getLongitude() + "\">\n");
+			    out.append("\t\t\t\t<ele>" + pt.getElevation() + "</ele>\n");
+			    out.append("\t\t\t\t<time>" + pt.timeString() + "</time>\n");
 			    out.append("\t\t\t</trkpt>\n");
 	
 			}
