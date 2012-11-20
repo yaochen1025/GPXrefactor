@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class GPXtrkseg {
     
-    private ArrayList trkpts;
+    private ArrayList<GPXtrkpt> trkpts;
 
-    public GPXtrkseg(ArrayList trkpts) {
+    public GPXtrkseg(ArrayList<GPXtrkpt> trkpts) {
     	this.trkpts = trkpts;
     }
 
@@ -22,7 +22,7 @@ public class GPXtrkseg {
      */
     public GPXtrkpt trkpt(int index) {
 		if (index >= trkpts.size()) return null;
-		else return (GPXtrkpt)(trkpts.get(index));
+		return trkpts.get(index);
     }
 
     /**
@@ -37,7 +37,7 @@ public class GPXtrkseg {
      */
     public GPXtrkpt[] trkpts() {
 		GPXtrkpt pts[] = new GPXtrkpt[trkpts.size()];
-		for (int i = 0; i < pts.length; i++) pts[i] = (GPXtrkpt)trkpts.get(i);
+		for (int i = 0; i < pts.length; i++) pts[i] = trkpts.get(i);
 		return pts;
     }
     
