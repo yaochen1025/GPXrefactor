@@ -14,7 +14,7 @@ public class GPXtrk {
     // a list of track segments
     private ArrayList<GPXtrkseg> trksegs;
 
-    public GPXtrk(String name, ArrayList<GPXtrkseg> trksegs) {
+    public GPXtrk(String name, ArrayList<GPXtrkseg> trksegs, GPXobject parent) {
 		this.name = name;
 		this.trksegs = trksegs;
     }
@@ -33,9 +33,7 @@ public class GPXtrk {
 		if (index >= trksegs.size()) {
 			return null;
 		}
-		else {
-			return trksegs.get(index);
-		}
+		return trksegs.get(index);
     }
 
     /**
