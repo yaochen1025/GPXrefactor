@@ -33,7 +33,6 @@ public class GPXtrkpt {
 		}
     }
 
-    /* Accessors */
     public double getLatitude() { 
     	return lat; 
     }
@@ -52,5 +51,14 @@ public class GPXtrkpt {
     
     public long getTime() {
     	return this.time.getTime();
+    }
+    
+    public String toString() {
+    	StringBuffer out = new StringBuffer();
+	    out.append("\n<trkpt lat=\"" + lat + "\" lon=\"" + lon + "\">");
+	    out.append("\n\t<ele>" + ele + "</ele>");
+	    out.append("\n\t<time>" + timeString + "</time>");
+	    out.append("\n</trkpt>");
+	    return out.toString();
     }
 }

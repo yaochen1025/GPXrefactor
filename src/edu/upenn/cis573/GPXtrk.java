@@ -23,7 +23,7 @@ public class GPXtrk {
 		}
 	}
 
-	public String name() { 
+	public String getName() { 
 		return name; 
 	}
 
@@ -133,5 +133,18 @@ public class GPXtrk {
 			}
 		}
 		return fastestSegment;
+	}
+	
+	public String toString() {
+		StringBuffer out = new StringBuffer();
+		out.append("\n<trk>");
+		if (name != null) {
+			out.append("\n\t<name>" + name + "</name>");
+		}
+		for (int i = 0; i < trksegs.size(); i++) {
+			out.append(trksegs.get(i).toString().replace("\n", "\n\t"));
+		}
+		out.append("\n</trk>");
+		return out.toString();
 	}
 }

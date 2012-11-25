@@ -1,8 +1,6 @@
 package edu.upenn.cis573;
 
 
-import static org.junit.Assert.*;
-
 import java.util.Calendar;
 
 import org.junit.Before;

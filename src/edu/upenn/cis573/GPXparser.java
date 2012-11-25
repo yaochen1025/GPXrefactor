@@ -19,29 +19,38 @@ import org.dom4j.io.SAXReader;
 
 public class GPXparser {
 	
-	public GPXobject fromFile(String fileName) {
+	public static boolean checkFormat(String fileName) {
 		Element root = null;
 		try {
-			root = this.readGPXFile(fileName);
+			root = readGPXFile(fileName);
+		} catch (Exception e) {
+			return false;
+		}
+		return validateGPXFile(root);
+	}
+	
+	public static GPXobject fromFile(String fileName) {
+		Element root = null;
+		try {
+			root = readGPXFile(fileName);
 		} catch (Exception e) {
 			return null;
 		}
-		if (!this.validateGPXFile(root)) {
+		if (!validateGPXFile(root)) {
 			return null;
 		}
-		return this.mapToGPXObject(root);
+		return mapToGPXObject(root);
 	}
 	
-	private GPXobject mapToGPXObject(Element root) {
-		Element gpx = root.element("gpx");
+	private static GPXobject mapToGPXObject(Element gpx) {
 		Element time = gpx.element("time");
 		Element trk = gpx.element("trk");
 		String timeVal = time.getText();
-		GPXtrk gpxTrk = this.mapToTrk(trk);
+		GPXtrk gpxTrk = mapToTrk(trk);
 		return new GPXobject(timeVal, gpxTrk);
 	}
 	
-	private GPXtrk mapToTrk(Element trk) {
+	private static GPXtrk mapToTrk(Element trk) {
 		Element name = trk.element("name");
 		List<Element> trkSegs = trk.elements("trkseg");
 		String nameVal = null;
@@ -58,7 +67,7 @@ public class GPXparser {
 		return new GPXtrk(nameVal, segs);
 	}
     
-	private GPXtrkseg mapToTrkSeg(Element trkSeg) {
+	private static GPXtrkseg mapToTrkSeg(Element trkSeg) {
 		List<Element> trkPts = trkSeg.elements("trkpt");
 		ArrayList<GPXtrkpt> pts = new ArrayList<GPXtrkpt>();
 		if (trkPts != null) {
@@ -70,7 +79,7 @@ public class GPXparser {
 		return new GPXtrkseg(pts);
 	}
 	
-	private GPXtrkpt mapToTrkPt(Element trkPt) {
+	private static GPXtrkpt mapToTrkPt(Element trkPt) {
 		Attribute lat = trkPt.attribute("lat");
 		Attribute lon = trkPt.attribute("lon");
 		Element ele = trkPt.element("ele");
@@ -82,25 +91,20 @@ public class GPXparser {
 		return new GPXtrkpt(latVal, lonVal, eleVal, timeVal);
 	}
 	
-    private Element readGPXFile(String fileName) throws Exception {
+    private static Element readGPXFile(String fileName) throws Exception {
     	SAXReader reader = new SAXReader();
     	Document doc = reader.read(new File(fileName));
     	return doc.getRootElement();
     }
     
-    private boolean validateGPXFile(Element root) {
-    	List<Element> children = root.elements();
-    	if (children.size() != 1) {
+    private static boolean validateGPXFile(Element root) {
+    	if (!"gpx".equals(root.getName())) {
     		return false;
     	}
-    	Element gpx = children.get(0);
-    	if (!"gpx".equals(gpx.getName())) {
-    		return false;
-    	}
-    	return validateGPXElement(gpx);
+    	return validateGPXElement(root);
     }
 	
-	private boolean validateGPXElement(Element gpx) {
+	private static boolean validateGPXElement(Element gpx) {
 		List<Element> children = gpx.elements();
 		if (children.size() != 2) {
 			return false;
@@ -113,9 +117,9 @@ public class GPXparser {
 		return validateTimeElement(time)&&validateTrkElement(trk);
 	}
 	
-	private boolean validateTimeElement(Element time) {
+	private static boolean validateTimeElement(Element time) {
 		String value = time.getText();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'T'");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		try {
 			format.parse(value);
 		} catch (ParseException e) {
@@ -124,7 +128,7 @@ public class GPXparser {
 		return true;
 	}
 	
-	private boolean validateTrkElement(Element trk) {
+	private static boolean validateTrkElement(Element trk) {
 		List<Element> children = trk.elements();
 		if (children.size() == 0) {
 			return true;
@@ -134,9 +138,9 @@ public class GPXparser {
 		if ("name".equals(maybeName.getName())) {
 			start = 1;
 		}
-		for (int i = start; start < children.size(); i++) {
+		for (int i = start; i < children.size(); i++) {
 			Element trkSeg = children.get(i);
-			if (!"trkSeg".equals(trkSeg.getName())) {
+			if (!"trkseg".equals(trkSeg.getName())) {
 				return false;
 			}
 			if (!validateTrkSegElement(trkSeg)) {
@@ -146,7 +150,7 @@ public class GPXparser {
 		return true;
 	}
 	
-	private boolean validateTrkSegElement(Element trkSeg) {
+	private static boolean validateTrkSegElement(Element trkSeg) {
 		List<Element> children = trkSeg.elements();
 		for (int i = 0; i < children.size(); i++) {
 			Element trkPt = children.get(i);
@@ -157,7 +161,7 @@ public class GPXparser {
 		return true;
 	}
 	
-	private boolean validateTrkPtElement(Element trkPt) {
+	private static boolean validateTrkPtElement(Element trkPt) {
 		List<Element> children = trkPt.elements();
 		if (children.size() != 2) {
 			return false;
@@ -173,7 +177,7 @@ public class GPXparser {
 		if (!validateTimeElement(time)) {
 			return false;
 		}
-		List<Attribute> attrs = ele.attributes();
+		List<Attribute> attrs = trkPt.attributes();
 		if (attrs.size() != 2) {
 			return false;
 		}

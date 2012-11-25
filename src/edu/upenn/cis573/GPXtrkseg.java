@@ -100,4 +100,14 @@ public class GPXtrkseg {
 		double totalDistance = this.totalLength();
 		return totalDistance/totalTime;
 	}
+	
+	public String toString() {
+		StringBuffer out = new StringBuffer();
+		out.append("\n<trkseg>");
+		for (int i = 0; i < trkpts.size(); i++) {
+			out.append(trkpts.get(i).toString().replace("\n", "\n\t"));
+		}
+		out.append("\n</trkseg>");
+		return out.toString();
+	}
 }

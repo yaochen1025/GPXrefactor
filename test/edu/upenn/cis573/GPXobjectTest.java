@@ -41,7 +41,7 @@ public class GPXobjectTest {
 		
 		GPXobject obj = new GPXobject("2012-11-05T15:03:00Z", trk);
 		
-		String value = "<gpx>\n<time>2012-11-05T15:03:00Z</time>\n\t<trk>\n\t\t<name>Test track</name>\n\t\t<trkseg>\n\t\t\t<trkpt lat=\"0.0\" lon=\"0.0\">\n\t\t\t\t<ele>0.0</ele>\n\t\t\t\t<time>2012-10-29T15:03:00Z</time>\n\t\t\t</trkpt>\n\t\t\t<trkpt lat=\"10.0\" lon=\"10.0\">\n\t\t\t\t<ele>10.0</ele>\n\t\t\t\t<time>2012-10-30T15:03:00Z</time>\n\t\t\t</trkpt>\n\t\t</trkseg>\n\t\t<trkseg>\n\t\t\t<trkpt lat=\"20.0\" lon=\"20.0\">\n\t\t\t\t<ele>20.0</ele>\n\t\t\t\t<time>2012-10-31T15:03:00Z</time>\n\t\t\t</trkpt>\n\t\t\t<trkpt lat=\"30.0\" lon=\"30.0\">\n\t\t\t\t<ele>30.0</ele>\n\t\t\t\t<time>2012-11-01T15:03:00Z</time>\n\t\t\t</trkpt>\n\t\t</trkseg>\n\t</trk>\n</gpx>\n";
+		String value = "<gpx>\n\t<time>2012-11-05T15:03:00Z</time>\n\t<trk>\n\t\t<name>Test track</name>\n\t\t<trkseg>\n\t\t\t<trkpt lat=\"0.0\" lon=\"0.0\">\n\t\t\t\t<ele>0.0</ele>\n\t\t\t\t<time>2012-10-29T15:03:00Z</time>\n\t\t\t</trkpt>\n\t\t\t<trkpt lat=\"10.0\" lon=\"10.0\">\n\t\t\t\t<ele>10.0</ele>\n\t\t\t\t<time>2012-10-30T15:03:00Z</time>\n\t\t\t</trkpt>\n\t\t</trkseg>\n\t\t<trkseg>\n\t\t\t<trkpt lat=\"20.0\" lon=\"20.0\">\n\t\t\t\t<ele>20.0</ele>\n\t\t\t\t<time>2012-10-31T15:03:00Z</time>\n\t\t\t</trkpt>\n\t\t\t<trkpt lat=\"30.0\" lon=\"30.0\">\n\t\t\t\t<ele>30.0</ele>\n\t\t\t\t<time>2012-11-01T15:03:00Z</time>\n\t\t\t</trkpt>\n\t\t</trkseg>\n\t</trk>\n</gpx>\n";
 
 		assertEquals(value, obj.toString());
 	}

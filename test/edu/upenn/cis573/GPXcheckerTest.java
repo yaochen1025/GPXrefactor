@@ -14,38 +14,34 @@ public class GPXcheckerTest {
 	
 	@Test
 	public void testCheckFormatGood() {
-		GPXformat format = GPXchecker.checkFormat("files/good.gpx");
-		assertEquals(true, format.isValid());
+		boolean isValid = GPXparser.checkFormat("files/good.gpx");
+		assertEquals(true, isValid);
 	}
 
 	@Test
 	public void testCheckFormatMissingName() {
-		GPXformat format = GPXchecker.checkFormat("files/missingName.gpx");
-		// this is still okay because name is optional
-		assertEquals(true, format.isValid());
+		boolean isValid = GPXparser.checkFormat("files/missingName.gpx");
+		assertEquals(true, isValid);
 	}
 
 	@Test
 	public void testCheckFormatMissingTime() {
-		GPXformat format = GPXchecker.checkFormat("files/missingTime.gpx");
-		// this is bad
-		assertEquals(false, format.isValid());
-		assertEquals("Format error! Expected <time> tag", format.message());
+		boolean isValid = GPXparser.checkFormat("files/missingTime.gpx");
+		assertEquals(false, isValid);
+		//assertEquals("Format error! Expected <time> tag", format.message());
 	}
 	
 	@Test
 	public void testCheckFormatNoTrkPts() {
-		GPXformat format = GPXchecker.checkFormat("files/noTrkPts.gpx");
-		// this is okay because you can have a trkseg with no trkpts
-		assertEquals(true, format.isValid());
+		boolean isValid = GPXparser.checkFormat("files/noTrkPts.gpx");
+		assertEquals(true, isValid);
 	}
 
 	@Test
 	public void testCheckFormatUnbalancedTags() {
-		GPXformat format = GPXchecker.checkFormat("files/unbalancedTags.gpx");
-		// this is bad
-		assertEquals(false, format.isValid());
-		assertEquals("Format error! Expected </trkpt> tag", format.message());
+		boolean isValid = GPXparser.checkFormat("files/unbalancedTags.gpx");
+		assertEquals(false, isValid);
+		//assertEquals("Format error! Expected </trkpt> tag", format.message());
 	}
 
 
